@@ -1,6 +1,13 @@
-/** @file   squeak4.c
+/** @file   jukebox1.c
     @author M.P. Hayes
-    @date   30 Aug 2011
+    @date   30 Aug 2013
+
+    @note   The fidelity of the notes is poor due to jitter
+    produced by the display task.
+    @note   The tunes are stored in RAM.  Adding more tunes can cause
+    a subtle memory overflow and the program will fail.  A solution
+    would be to store the tunes in flash memory but this requires
+    some jiggery-pokery due to the Harvard architecture of the AVR.
 */
 
 #include "system.h"
@@ -14,8 +21,10 @@
 #include "../fonts/font3x5_1.h"
 
 
-/* Connect piezo tweeter to outermost pins of UCFK4 P1 connector.  */
-#define PIEZO_PIO PIO_DEFINE (PORT_D, 6)
+/* Connect piezo tweeter to pins 6 and 8 of UCFK4 P1 connector
+   for push-pull operation.  */
+#define PIEZO1_PIO PIO_DEFINE (PORT_D, 4)
+#define PIEZO2_PIO PIO_DEFINE (PORT_D, 6)
 
 /* Define polling rates in Hz.  */
 #define TWEETER_TASK_RATE 20000
@@ -40,17 +49,12 @@ static char *note_names[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A
 
 static const char tune1[] =
 {
-#include "electric.mmel"
+#include "are_friends_electric.mmel"
 };
 
 static const char tune2[] =
 {
-#include "temple_of_love.mmel"
-};
-
-static const char tune3[] =
-{
-#include "electric.mmel"
+#include "imperial_march.mmel"
 };
 
 
@@ -84,13 +88,18 @@ static void tweeter_task_init (void)
 {
     tweeter = tweeter_init (&tweeter_info, TWEETER_TASK_RATE, scale_table);
 
-    pio_config_set (PIEZO_PIO, PIO_OUTPUT_LOW);
+    pio_config_set (PIEZO1_PIO, PIO_OUTPUT_LOW);
+    pio_config_set (PIEZO2_PIO, PIO_OUTPUT_HIGH);
 }
 
 
 static void tweeter_task (__unused__ void *data)
 {
-    pio_output_set (PIEZO_PIO, tweeter_update (tweeter));
+    uint8_t state;
+
+    state = tweeter_update (tweeter);
+    pio_output_set (PIEZO1_PIO, state);
+    pio_output_set (PIEZO2_PIO, !state);
 }
 
 
@@ -125,10 +134,8 @@ static void navswitch_task (__unused__ void *data)
     }
     if (navswitch_push_event_p (NAVSWITCH_NORTH))
         mmelody_play (melody, tune1);            
-    if (navswitch_push_event_p (NAVSWITCH_EAST))
-        mmelody_play (melody, tune2);            
     if (navswitch_push_event_p (NAVSWITCH_SOUTH))
-        mmelody_play (melody, tune3);            
+        mmelody_play (melody, tune2);            
 }
 
 
