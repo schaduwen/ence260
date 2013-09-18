@@ -237,17 +237,24 @@ def makefile_print (options, template, maincfilename, filedeps,
     print text
 
 
-def maincfilename_find (dirname):
+def subprocess_command(command):
 
-    p = subprocess.Popen (['grep -l "main[ ]*(" ' + dirname + '/*.c'],
-                          shell = True, stdin = subprocess.PIPE,
-                          stdout = subprocess.PIPE,
-                          close_fds = True)
+    p = subprocess.Popen (command, shell=True,
+                          stdin=subprocess.PIPE,
+                          stdout=subprocess.PIPE,
+                          close_fds=True)
     
     (child_stdout, child_stdin) = (p.stdout, p.stdin)
     child_stdin.close ()
-    files = child_stdout.read ()
+    response = child_stdout.read ()
     child_stdout.close ()
+
+    return response
+
+
+def maincfilename_find (dirname):
+
+    files = subprocess_command('grep -l "main[ ]*(" ' + dirname + '/*.c')
 
     filelist = files.strip ().split (' ')
     if not filelist:
@@ -265,7 +272,14 @@ def functions_find (filepath, functiondeps, functions, options):
         print >> sys.stderr, command
     os.system (command)
 
-    rtlfilename = os.path.abspath (os.path.basename (filepath)) + '.012t.cfg'
+    version = subprocess_command(options.compile + ' -dumpversion')
+    version_parts = version.split('.')
+    if version_parts[0] >= '5':
+        ext = '.014t.cfg'
+    else:
+        ext = '.012t.cfg'
+
+    rtlfilename = os.path.abspath (os.path.basename (filepath)) + ext
 
     if not os.path.exists (rtlfilename):
         return
