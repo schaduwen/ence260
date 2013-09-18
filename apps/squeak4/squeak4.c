@@ -14,8 +14,10 @@
 #include "../fonts/font3x5_1.h"
 
 
-/* Connect piezo tweeter to outermost pins of UCFK4 P1 connector.  */
-#define PIEZO_PIO PIO_DEFINE (PORT_D, 6)
+/* Connect piezo tweeter to pins 6 and 8 of UCFK4 P1 connector
+   for push-pull operation.  This gives increased volume.  */
+#define PIEZO1_PIO PIO_DEFINE (PORT_D, 4)
+#define PIEZO2_PIO PIO_DEFINE (PORT_D, 6)
 
 /* Define polling rates in Hz.  */
 #define TWEETER_TASK_RATE 20000
@@ -41,7 +43,7 @@ static char *note_names[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A
 static const char tune1[] =
 {
 //#include "mysterex.mmel"
-#include "electric.mmel"
+#include "are_friends_electric.mmel"
 "    >"
 };
 
@@ -76,13 +78,18 @@ static void tweeter_task_init (void)
 {
     tweeter = tweeter_init (&tweeter_info, TWEETER_TASK_RATE, scale_table);
 
-    pio_config_set (PIEZO_PIO, PIO_OUTPUT_LOW);
+    pio_config_set (PIEZO1_PIO, PIO_OUTPUT_LOW);
+    pio_config_set (PIEZO2_PIO, PIO_OUTPUT_HIGH);
 }
 
 
 static void tweeter_task (__unused__ void *data)
 {
-    pio_output_set (PIEZO_PIO, tweeter_update (tweeter));
+     uint8_t state;
+
+    state = tweeter_update (tweeter);
+    pio_output_set (PIEZO1_PIO, state);
+    pio_output_set (PIEZO2_PIO, !state);
 }
 
 
