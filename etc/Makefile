@@ -13,7 +13,7 @@ APPDIRS = $(filter-out ../apps/README ../Makefile, $(wildcard ../apps/*/ ))
 DOCDIRS = $(addsuffix /doc, $(APPDIRS))
 
 # Don't link against test-scaffold if directly accessing harware
-FOO = $(shell grep -l "\<avr/io.h\>" ../lab*/*/*.c)
+FOO = $(shell grep -l "\<avr/io.h\>" ../*/*/*.c)
 DUDDIRS = $(foreach filename, $(FOO), $(dir $(filename)))
 TESTDIRS = $(filter-out $(DUDDIRS), $(APPDIRS))
 

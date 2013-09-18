@@ -1,10 +1,17 @@
-/** @file   squeak4.c
+/** @file   jukebox1.c
     @author M.P. Hayes
-    @date   30 Aug 2011
+    @date   30 Aug 2013
+
+    @note   The fidelity of the notes is poor due to jitter
+    produced by the display task.
+    @note   The tunes are stored in RAM.  Adding more tunes can cause
+    a subtle memory overflow and the program will fail.  A solution
+    would be to store the tunes in flash memory but this requires
+    some jiggery-pokery due to the Harvard architecture of the AVR.
 */
 
 #include "system.h"
-#include "button.h"
+#include "navswitch.h"
 #include "led.h"
 #include "pio.h"
 #include "task.h"
@@ -15,7 +22,7 @@
 
 
 /* Connect piezo tweeter to pins 6 and 8 of UCFK4 P1 connector
-   for push-pull operation.  This gives increased volume.  */
+   for push-pull operation.  */
 #define PIEZO1_PIO PIO_DEFINE (PORT_D, 4)
 #define PIEZO2_PIO PIO_DEFINE (PORT_D, 6)
 
@@ -24,7 +31,7 @@
 
 #define TUNE_TASK_RATE 200
 
-#define BUTTON_TASK_RATE 10
+#define NAVSWITCH_TASK_RATE 10
 
 #define TUNE_BPM_RATE 200
 
@@ -42,9 +49,12 @@ static char *note_names[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A
 
 static const char tune1[] =
 {
-//#include "mysterex.mmel"
 #include "are_friends_electric.mmel"
-"    >"
+};
+
+static const char tune2[] =
+{
+#include "imperial_march.mmel"
 };
 
 
@@ -85,7 +95,7 @@ static void tweeter_task_init (void)
 
 static void tweeter_task (__unused__ void *data)
 {
-     uint8_t state;
+    uint8_t state;
 
     state = tweeter_update (tweeter);
     pio_output_set (PIEZO1_PIO, state);
@@ -99,8 +109,6 @@ static void tune_task_init (void)
 			   (mmelody_callback_t) note_play, tweeter);
 
     mmelody_speed_set (melody, TUNE_BPM_RATE);
-
-    mmelody_play (melody, tune1);
 }
 
 
@@ -110,23 +118,24 @@ static void tune_task (__unused__ void *data)
 }
 
 
-static void button_task_init (void)
+static void navswitch_task_init (void)
 {
-    button_init ();
+    navswitch_init ();
 }
 
 
-static void button_task (__unused__ void *data)
+static void navswitch_task (__unused__ void *data)
 {
-    button_update ();
+    navswitch_update ();
 
-    if (button_push_event_p (BUTTON1))
+    if (navswitch_push_event_p (NAVSWITCH_PUSH))
     {
-        if (mmelody_active_p (melody))
-            mmelody_play (melody, 0);            
-        else
-            mmelody_play (melody, tune1);
+        mmelody_play (melody, 0);            
     }
+    if (navswitch_push_event_p (NAVSWITCH_NORTH))
+        mmelody_play (melody, tune1);            
+    if (navswitch_push_event_p (NAVSWITCH_SOUTH))
+        mmelody_play (melody, tune2);            
 }
 
 
@@ -153,7 +162,7 @@ int main (void)
         {.func = led_flash_task, .period = TASK_RATE / LED_TASK_RATE, .data = 0},
         {.func = tune_task, .period = TASK_RATE / TUNE_TASK_RATE, .data = 0},
         {.func = display_task, .period = TASK_RATE / DISPLAY_TASK_RATE, .data = 0}, 
-        {.func = button_task, .period = TASK_RATE / BUTTON_TASK_RATE, .data = 0},
+        {.func = navswitch_task, .period = TASK_RATE / NAVSWITCH_TASK_RATE, .data = 0},
     };
 
     system_init ();
@@ -162,7 +171,7 @@ int main (void)
     tweeter_task_init ();
     tune_task_init ();
     display_task_init ();
-    button_task_init ();
+    navswitch_task_init ();
 
     task_schedule (tasks, ARRAY_SIZE (tasks));
     return 0;
