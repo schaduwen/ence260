@@ -14,10 +14,13 @@ all: beep1
 
 
 # Compile: create object files from C source files.
-beep1-test.o: beep1.c ../../drivers/button.h ../../drivers/test/avrtest.h ../../drivers/test/delay.h ../../drivers/test/pio.h ../../drivers/test/system.h ../../utils/pacer.h
+beep1-test.o: beep1.c ../../drivers/button.h ../../drivers/led.h ../../drivers/test/avrtest.h ../../drivers/test/delay.h ../../drivers/test/pio.h ../../drivers/test/system.h ../../utils/pacer.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 button-test.o: ../../drivers/button.c ../../drivers/button.h ../../drivers/test/avrtest.h ../../drivers/test/pio.h ../../drivers/test/system.h
+	$(CC) -c $(CFLAGS) $< -o $@
+
+led-test.o: ../../drivers/led.c ../../drivers/led.h ../../drivers/test/avrtest.h ../../drivers/test/pio.h ../../drivers/test/system.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 mgetkey-test.o: ../../drivers/test/mgetkey.c ../../drivers/test/mgetkey.h
@@ -39,14 +42,14 @@ pacer-test.o: ../../utils/pacer.c ../../drivers/test/system.h ../../drivers/test
 
 
 # Link: create executable file from object files.
-beep1: beep1-test.o button-test.o mgetkey-test.o pio-test.o system-test.o timer-test.o pacer-test.o
+beep1: beep1-test.o button-test.o led-test.o mgetkey-test.o pio-test.o system-test.o timer-test.o pacer-test.o
 	$(CC) $(CFLAGS) $^ -o $@ -lrt
 
 
 # Clean: delete derived files.
 .PHONY: clean
 clean: 
-	-$(DEL) beep1 beep1-test.o button-test.o mgetkey-test.o pio-test.o system-test.o timer-test.o pacer-test.o
+	-$(DEL) beep1 beep1-test.o button-test.o led-test.o mgetkey-test.o pio-test.o system-test.o timer-test.o pacer-test.o
 
 
 
