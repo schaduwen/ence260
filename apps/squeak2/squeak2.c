@@ -37,7 +37,7 @@ static tweeter_obj_t tweeter_info;
 static const char tune1[] =
 {
 //#include "mysterex.mmel"
-#include "electric.mmel"
+#include "are_friends_electric.mmel"
 "    >"
 };
 
