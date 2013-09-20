@@ -273,8 +273,7 @@ def functions_find (filepath, functiondeps, functions, options):
     os.system (command)
 
     version = subprocess_command(options.compile + ' -dumpversion')
-    version_parts = version.split('.')
-    if version_parts[0] >= '5':
+    if version > '4.5.3':
         ext = '.014t.cfg'
     else:
         ext = '.012t.cfg'
