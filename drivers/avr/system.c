@@ -30,6 +30,7 @@ static void system_watchdog_timer_init (void)
 }
 
 
+/** Initialise clock and disable watchdog timer.  */
 void system_init (void)
 {
     system_clock_init ();
