@@ -272,7 +272,8 @@ def functions_find (filepath, functiondeps, functions, options):
         print >> sys.stderr, command
     os.system (command)
 
-    version = subprocess_command(options.compile + ' -dumpversion')
+    version = subprocess_command(options.compile + ' -dumpversion').strip()
+
     if version > '4.5.3':
         ext = '.014t.cfg'
     else:
