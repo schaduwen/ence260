@@ -1,4 +1,4 @@
-/** @file   stars1.c
+/** @file   stars2.c
     @author M.P. Hayes
     @date   25 Sep 2013
     @brief  Example of using pseudorandom numbers and controlling pixel
@@ -19,11 +19,11 @@
    A lower value (say 5) is useful for flashing pixels.  */
 #define PWM_RATE 40
 
-/* Number of twinkling stars.  */
-#define NUM_STARS 10
+/* This is the rate (Hz) that new stars are created.  */
+#define CREATE_RATE 2
 
 /* This is the rate (Hz) of luminance changes.  */
-#define TWINKLE_RATE 5
+#define FADE_RATE 2
 
 #define UPDATE_RATE (LUMINANCE_STEPS * PWM_RATE)
 
@@ -31,17 +31,17 @@
 
 int main (void)
 {
-    uint16_t twinkle_tick = 0;
+    uint16_t fade_tick = 0;
     uint16_t create_tick = 0;
     uint8_t pwm_tick = 0;
-    uint8_t i;
     uint8_t x;
     uint8_t y;
     uint8_t col;
     /* This stores the current luminance level for each pixel.  */
     uint8_t display[TINYGL_HEIGHT][TINYGL_WIDTH] = {0, };
     /* This controls the luminance levels.  The maximum value
-       of LUMINANCE_STEPS gives 100 percent duty cycle.   */
+       of LUMINANCE_STEPS gives 100 percent duty cycle. 
+       The first value must be zero to turn star off when it dies.  */
     const uint8_t levels[] = {0, 1, 2, 4, 8, 15, 25, 15, 8, 4, 2, 1};
 
     system_init ();
@@ -49,19 +49,6 @@ int main (void)
     tinygl_init (LOOP_RATE);
 
     pacer_init (LOOP_RATE);
-
-    for (i = 0; i < NUM_STARS; i++)
-    {
-        /* Create new star, but not over a live one.  */
-        do
-        {
-            x = rand () % TINYGL_WIDTH;
-            y = rand () % TINYGL_HEIGHT;
-        } while (display[y][x]);
-        
-        display[y][x] = rand () % ARRAY_SIZE (levels);
-    }
-
     
     while (1)
     {
@@ -73,10 +60,10 @@ int main (void)
             tinygl_update ();
         }
 
-        twinkle_tick++;
-        if (twinkle_tick >= UPDATE_RATE / TWINKLE_RATE)
+        fade_tick++;
+        if (fade_tick >= UPDATE_RATE / FADE_RATE)
         {
-            twinkle_tick = 0;
+            fade_tick = 0;
 
             /* Change luminance of stars until they die.  */
             for (x = 0; x < TINYGL_WIDTH; x++)
@@ -84,15 +71,27 @@ int main (void)
                 for (y = 0; y < TINYGL_HEIGHT; y++)
                 {
                     if (display[y][x] > 0)
-                    {
                         display[y][x]--;
-                        if (display[y][x] == 0)
-                            display[y][x] = ARRAY_SIZE (levels) - 1;
-                    }
                 }
             }
         }
 
+        create_tick++;
+        if (create_tick >= UPDATE_RATE / CREATE_RATE)
+        {
+            create_tick = 0;
+
+            /* Create new star, but not over a live one.  */
+            do
+            {
+                x = rand () % TINYGL_WIDTH;
+                y = rand () % TINYGL_HEIGHT;
+            } while (display[y][x]);
+
+            display[y][x] = ARRAY_SIZE (levels) - 1;
+        }
+
+        
         /* Pulse width modulate pixels to control luminance.  */
         for (x = 0; x < TINYGL_WIDTH; x++)
         {
