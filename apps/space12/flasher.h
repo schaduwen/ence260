@@ -2,6 +2,7 @@
     @author M. P. Hayes, UCECE
     @date   13 March 2005
     @brief  Combined software PWM and flashing module.  Use at your peril!
+            This should be simplified.
 */
 #ifndef FLASHER_H
 #define FLASHER_H
@@ -38,7 +39,7 @@ typedef struct
     /* This is the modulation period.  It determines the frequency
        of a tone or flicker rate of a LED.  */
     uint8_t mod_period;
-    /* This is the modulation duty.  It determines the luminance of a LED.  */
+    /* This is the modulation duty.  It determines the luminance of an LED.  */
     uint8_t mod_duty;
     /* This is the period between the start of two flashes in a sequence.  */
     uint8_t flasher_period;
