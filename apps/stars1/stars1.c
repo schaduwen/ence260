@@ -1,6 +1,9 @@
 /** @file   stars1.c
     @author M.P. Hayes
     @date   25 Sep 2013
+    @brief  Example of using pseudorandom numbers and controlling pixel
+    brightness with PWM.  Note, pseudorandom numbers follow the same
+    sequence.
 */
 
 #include <stdlib.h>
@@ -12,7 +15,8 @@
    but requires a faster update rate.  */
 #define LUMINANCE_STEPS 25
 
-/* This needs to be fast enough to prevent the eye noticing flicker.  */
+/* This needs to be fast enough to prevent the eye noticing flicker.
+   A lower value (say 5) is useful for flashing pixels.  */
 #define PWM_RATE 40
 
 /* This is the rate (Hz) that new stars are created.  */
@@ -55,7 +59,6 @@ int main (void)
 
             tinygl_update ();
         }
-
 
         fade_tick++;
         if (fade_tick >= UPDATE_RATE / FADE_RATE)
