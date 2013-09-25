@@ -1,7 +1,8 @@
 /** @file   flasher.c
     @author M. P. Hayes, UCECE
     @date   13 March 2005
-    @brief 
+    @brief  Combined software PWM and flashing module.  Use at your peril!
+            This should be simplified.
 */
 
 #include "flasher.h"
