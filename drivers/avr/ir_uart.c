@@ -49,8 +49,10 @@ ir_uart_putc (char ch)
 {
     usart1_putc (ch);
 
-    /* The character gets echoed on the UCFK4 so we should
-       probably gobble it here.  */
+    /* Gobble echoed character.  The echoing is due to an electrical
+       common-path interference problem caused by a poor PCB layout of the
+       track powering the IR receiver.  */
+    ir_uart_getc ();
 
     return 1;
 }
