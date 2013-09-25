@@ -85,15 +85,11 @@ int main (void)
             if (navswitch_push_event_p (NAVSWITCH_WEST))
             {
                 ir_uart_putc (--data);
-                /* Gobble echoed character.  */
-                ir_uart_getc ();
             }
 
             if (navswitch_push_event_p (NAVSWITCH_EAST))
             {
                 ir_uart_putc (++data);
-                /* Gobble echoed character.  */
-                ir_uart_getc ();
             }
         }
     }
