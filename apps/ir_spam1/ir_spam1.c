@@ -40,7 +40,7 @@ int main (void)
             ticks = 0;
             ir_uart_putc ('2');
         }
-
+x
         tinygl_update ();
     }
 
