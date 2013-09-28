@@ -1,6 +1,6 @@
-/** @file   stars1.c
+/** @file   stars3.c
     @author M.P. Hayes
-    @date   25 Sep 2013
+    @date   28 Sep 2013
     @brief  Example of using pseudorandom numbers and controlling pixel
     brightness with PWM.  Note, pseudorandom numbers follow the same
     sequence.
