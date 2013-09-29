@@ -187,6 +187,18 @@ void tinygl_text (const char *string);
 void tinygl_draw_point (tinygl_point_t pos, tinygl_pixel_value_t pixel_value);
 
 
+/** Set pixel.
+    @param pos coordinates of point
+    @param pixel_value pixel value.  */
+void tinygl_pixel_set (tinygl_point_t pos, tinygl_pixel_value_t pixel_value);
+
+
+/** Get pixel.
+    @param pos coordinates of point
+    @return pixel value.  */
+tinygl_pixel_value_t tinygl_pixel_get (tinygl_point_t pos);
+
+
 /** Draw line.
     @param pos1 coordinates of start of line
     @param pos2 coordinates of end of line

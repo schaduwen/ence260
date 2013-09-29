@@ -32,14 +32,13 @@
 int main (void)
 {
     uint16_t twinkle_tick = 0;
-    uint16_t create_tick = 0;
     uint8_t pwm_tick = 0;
     uint8_t i;
     uint8_t x;
     uint8_t y;
     uint8_t col;
     /* This stores the current luminance level for each pixel.  */
-    uint8_t display[TINYGL_HEIGHT][TINYGL_WIDTH] = {0, };
+    uint8_t display[TINYGL_HEIGHT][TINYGL_WIDTH] = {{0, }};
     /* This controls the luminance levels.  The maximum value
        of LUMINANCE_STEPS gives 100 percent duty cycle.   */
     const uint8_t levels[] = {0, 1, 2, 4, 8, 15, 25, 15, 8, 4, 2, 1};
@@ -78,7 +77,7 @@ int main (void)
         {
             twinkle_tick = 0;
 
-            /* Change luminance of stars until they die.  */
+            /* Vary luminance of stars.  */
             for (x = 0; x < TINYGL_WIDTH; x++)
             {
                 for (y = 0; y < TINYGL_HEIGHT; y++)
