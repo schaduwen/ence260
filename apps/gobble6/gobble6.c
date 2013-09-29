@@ -198,7 +198,7 @@ int main (void)
     uint16_t tick = 0;
     uint16_t navswitch_tick = 0;
     uint8_t running = 0;
-    int moves = 0;
+    int duration = 0;
     thing_t things[NUM_THINGS];
 
     system_init ();
@@ -213,7 +213,7 @@ int main (void)
 
     pacer_init (LOOP_RATE);
 
-    tinygl_text ("GOBBLE");
+    tinygl_text ("GOBBLE: PUSH TO START");
 
     while (1)
     {
@@ -236,7 +236,7 @@ int main (void)
 
             if (running)
             {
-                moves++;
+                duration++;
                 if (navswitch_push_event_p (NAVSWITCH_NORTH))
                     monster_move (things, NUM_THINGS, 0, -1);
                 if (navswitch_push_event_p (NAVSWITCH_SOUTH))
@@ -256,23 +256,19 @@ int main (void)
 
                     running = 0;
                     led_set (LED1, running);
-                    sprintf (buffer, "%d", moves);
+                    sprintf (buffer, "%d", duration);
                     tinygl_text (buffer);
                 }
             }
             else
             {
-                if (navswitch_push_event_p (NAVSWITCH_NORTH)
-                    || navswitch_push_event_p (NAVSWITCH_EAST)
-                    || navswitch_push_event_p (NAVSWITCH_SOUTH)
-                    || navswitch_push_event_p (NAVSWITCH_WEST)
-                    || navswitch_push_event_p (NAVSWITCH_PUSH))
+                if (navswitch_push_event_p (NAVSWITCH_PUSH))
                 {
                     srand (timer_get ());
                     tinygl_clear ();
                     things_create (things, NUM_THINGS);
                     running = 1;
-                    moves = 0;
+                    duration = 0;
                     led_set (LED1, running);
                 }
             }
