@@ -102,15 +102,10 @@ static void monster_move (thing_t *things, uint8_t num)
     while (dy / 2)
         dy = dy / 2;
 
-    // printf ("%d %d %d %d %d\n", x, y, closest, dx, dy);
-
     other = thing_find (things, num, tinygl_point (x + dx, y + dy));
 
     if (other != -1)
-    {
-        // printf ("%d %d %d %d %d*\n", x, y, other, dx, dy);
         things[other].alive = 0;
-    }
 
     tinygl_draw_point (things[0].pos, 0);
     things[0].pos.x += dx;
@@ -207,7 +202,7 @@ static void things_create (thing_t *things, uint8_t num)
 }
 
 
-static void things_destroy (thing_t *things, uint8_t num)
+static void things_erase (thing_t *things, uint8_t num)
 {
     uint8_t i;
 
@@ -266,7 +261,7 @@ int main (void)
             }
             else
             {
-                things_destroy (things, NUM_THINGS);
+                things_erase (things, NUM_THINGS);
                 things_create (things, NUM_THINGS);
             }
         }
