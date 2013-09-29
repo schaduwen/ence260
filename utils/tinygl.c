@@ -35,6 +35,24 @@ static tinygl_state_t tinygl =
 };
 
 
+/** Set pixel.
+    @param pos coordinates of point
+    @param pixel_value pixel value.  */
+void tinygl_pixel_set (tinygl_point_t pos, tinygl_pixel_value_t pixel_value)
+{
+    display_pixel_set (pos.x, pos.y, pixel_value);
+}
+
+
+/** Get pixel.
+    @param pos coordinates of point
+    @return pixel value.  */
+tinygl_pixel_value_t tinygl_pixel_get (tinygl_point_t pos)
+{
+    return display_pixel_get (pos.x, pos.y);
+}
+
+
 /** Draw point.
     @param pos coordinates of point
     @param pixel_value pixel value for line.  */
