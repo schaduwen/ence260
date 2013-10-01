@@ -21,6 +21,7 @@ typedef struct tinygl_state_struct
     font_t *font;
     uint16_t update_rate;
     uint8_t message_index;
+    uint8_t message_repeats;
     uint16_t text_advance_period;
     int8_t scroll_pos;
     char message[TINYGL_MESSAGE_SIZE];
@@ -237,6 +238,9 @@ static void tinygl_text_advance (void)
     if (!tinygl.message[tinygl.message_index])
     {
         tinygl.message_index = 0;
+        if (tinygl.message_repeats == 0)
+            return;
+        tinygl.message_repeats--;
     }
     
     if (tinygl.message[tinygl.message_index])
@@ -278,12 +282,15 @@ static void tinygl_text_advance (void)
 }
 
 
-/** Display a message repeatedly.
+/** Display a message a specified number of times.
     @param string null terminated message to display
-    @param pos position on screen.  */
-void tinygl_draw_message (const char *string, tinygl_point_t pos)
+    @param pos position on screen
+    @param repeats number of times to repeat message.  */
+void tinygl_draw_message (const char *string, tinygl_point_t pos,
+                          uint8_t repeats)
 {
     tinygl.message_index = 0;
+    tinygl.message_repeats = repeats;
     tinygl.scroll_pos = 0;
 
     /* Not much we can do without a font.  */
@@ -314,7 +321,7 @@ void tinygl_draw_message (const char *string, tinygl_point_t pos)
 }
 
 
-/** Display a message repeatedly.
+/** Display a message repeatedly positioned at the top left pixel.
     @param string null terminated message to display.  */
 void tinygl_text (const char *string)
 {
@@ -323,7 +330,7 @@ void tinygl_text (const char *string)
     pos.x = 0;
     pos.y = (tinygl.dir == TINYGL_TEXT_DIR_ROTATE) ? TINYGL_HEIGHT - 1 : 0;
 
-    tinygl_draw_message (string, pos);
+    tinygl_draw_message (string, pos, ~0);
 }
 
 

@@ -170,10 +170,12 @@ tinygl_point_t tinygl_draw_char (char ch, tinygl_point_t pos);
 uint8_t tinygl_draw_string (const char *str, tinygl_point_t pos);
 
 
-/** Display a message repeatedly.
+/** Display a message a specified number of times.
     @param string null terminated message to display
-    @param pos position on screen.  */
-void tinygl_draw_message (const char *string, tinygl_point_t pos);
+    @param pos position on screen
+    @param repeats number of times to repeat message.  */
+void tinygl_draw_message (const char *string, tinygl_point_t pos,
+                          uint8_t repeats);
 
 
 /** Display a message repeatedly.
