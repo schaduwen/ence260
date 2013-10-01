@@ -19,11 +19,14 @@
 #define PWM_RATE 40
 
 /* This is the rate (Hz) of luminance changes.  */
-#define PULSATE_RATE 10
+#define PULSATE_RATE 1
 
 #define UPDATE_RATE (LUMINANCE_STEPS * PWM_RATE)
 
 #define LOOP_RATE (TINYGL_WIDTH * UPDATE_RATE)
+
+
+/* Brightness = Luminance ** 2.5.  */
 
 int main (void)
 {
@@ -31,11 +34,11 @@ int main (void)
     uint8_t pwm_tick = 0;
     uint8_t x;
     uint8_t y;
+    uint8_t update_col = 0;
     uint8_t col;
     uint8_t luminance = 0;
-    /* This controls the luminance levels.  The maximum value
-       of LUMINANCE_STEPS gives 100 percent duty cycle.   */
-    const uint8_t levels[] = {1, 2, 4, 8, 15, 25, 15, 8, 4, 2, 1};
+    /* This controls the luminance levels.  */
+    const uint8_t levels[] = {4, 8, 16, 32, 64, 100, 64, 32, 16, 4};
 
     system_init ();
 
@@ -54,36 +57,43 @@ int main (void)
             pacer_wait ();
 
             tinygl_update ();
-        }
 
-        pulsate_tick++;
-        if (pulsate_tick >= UPDATE_RATE / PULSATE_RATE)
-        {
-            pulsate_tick = 0;
-
-            if (luminance == 0)
-                luminance = ARRAY_SIZE (levels) - 1;
-            else
-                luminance--;
-        }
-
-        state = levels[luminance] > pwm_tick;
-
-        /* Pulse width modulate pixels to control luminance.  */
-        for (x = 0; x < TINYGL_WIDTH; x++)
-        {
-            for (y = 0; y < TINYGL_HEIGHT; y++)
+            if (update_col != col)
+                continue;
+            
+            if (update_col == 0)
+                update_col = TINYGL_WIDTH;
+            update_col--;
+            
+            pulsate_tick++;
+            if (pulsate_tick >= UPDATE_RATE / PULSATE_RATE)
             {
-                tinygl_draw_point (tinygl_point (x, y), state);
+                pulsate_tick = 0;
+                
+                if (luminance == 0)
+                    luminance = ARRAY_SIZE (levels) - 1;
+                else
+                    luminance--;
             }
-        }
-
-        led_set (LED1, state);
-
-        pwm_tick++;
-        if (pwm_tick >= UPDATE_RATE / PWM_RATE)
-        {
-            pwm_tick = 0;
+            
+            state = levels[luminance] > pwm_tick * 100 / LUMINANCE_STEPS;
+            
+            /* Pulse width modulate pixels to control luminance.  */
+            for (x = 0; x < TINYGL_WIDTH; x++)
+            {
+                for (y = 0; y < TINYGL_HEIGHT; y++)
+                {
+                    tinygl_draw_point (tinygl_point (x, y), state);
+                }
+            }
+            
+            led_set (LED1, state);
+            
+            pwm_tick++;
+            if (pwm_tick >= UPDATE_RATE / PWM_RATE)
+            {
+                pwm_tick = 0;
+            }
         }
     }
     return 0;
