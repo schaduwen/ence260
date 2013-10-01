@@ -61,6 +61,12 @@ int main (void)
         navswitch_tick++;
         if (navswitch_tick >= LOOP_RATE / NAVSWITCH_RATE)
         {
+            static int count = 0;
+
+            count++;
+            if (running && count % 4 == 0)
+                monster_toggle ();
+
             navswitch_tick = 0;
 
             navswitch_update ();

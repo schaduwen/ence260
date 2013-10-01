@@ -98,6 +98,13 @@ void monster_move (int8_t dx, int8_t dy)
 }
 
 
+void monster_toggle (void)
+{
+    tinygl_pixel_set (things[0].pos, ! tinygl_pixel_get (things[0].pos));
+}
+
+
+
 static void thing_move (uint8_t this)
 {
     uint8_t i;
