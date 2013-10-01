@@ -57,8 +57,15 @@ timer_tick_t timer_wait_until (timer_tick_t when)
         
         now = timer_get ();
 
+        /* Note, both when and now are unsigned so they wrap around to
+           zero when they overflow.  The difference is also unsigned
+           so when now < when then the result wraps around to a large
+           positive value and fails the following test.  */
         diff = now - when;
 
+        /* There is a possibility that we are called when when < now.
+           So we allow a possible overrun defined by
+           TIMER_OVERRUN_MAX.  */
         if (diff < TIMER_OVERRUN_MAX)
             return now;
     }
