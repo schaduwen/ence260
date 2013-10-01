@@ -22,11 +22,14 @@
 
 #define NAVSWITCH_RATE 50
 
+#define MONSTER_FLASH_RATE 5
+
 
 int main (void)
 {
     uint16_t tick = 0;
     uint16_t navswitch_tick = 0;
+    uint16_t monster_flash_tick = 0;
     bool running = 0;
     bool game_over = 1;
     int duration = 0;
@@ -58,15 +61,10 @@ int main (void)
             tinygl_update ();
         }
 
+        /* Poll the navswitch and update monster position.  */
         navswitch_tick++;
         if (navswitch_tick >= LOOP_RATE / NAVSWITCH_RATE)
         {
-            static int count = 0;
-
-            count++;
-            if (running && count % 4 == 0)
-                monster_toggle ();
-
             navswitch_tick = 0;
 
             navswitch_update ();
@@ -109,6 +107,7 @@ int main (void)
             }
         }
 
+        /* Move the things.  */
         tick++;
         if (tick >= LOOP_RATE / MOVE_RATE)
         {
@@ -119,6 +118,15 @@ int main (void)
                 duration++;
                 things_move ();
             }
+        }
+
+        /* Flash the monster.  */
+        monster_flash_tick++;
+        if (monster_flash_tick >= LOOP_RATE / MONSTER_FLASH_RATE / 2)
+        {
+            monster_flash_tick = 0;
+            if (running)
+                monster_toggle ();
         }
     }
     return 0;
