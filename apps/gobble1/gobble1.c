@@ -25,7 +25,7 @@ typedef struct monster_struct
 
 
 static int8_t monster_find (monster_t *monsters, uint8_t num,
-                            uint8_t x, uint8_t y)
+                                   uint8_t x, uint8_t y)
 {
     uint8_t i;
 

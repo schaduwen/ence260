@@ -1,7 +1,7 @@
 /** @file   gobble6.c
     @author M.P. Hayes
     @date   29 Sep 2013
-    @brief 
+    @brief  A simple game where a monster has to capture `things' that run away.
 */
 
 #include <stdio.h>
@@ -27,13 +27,12 @@
 
 int main (void)
 {
-    uint16_t tick = 0;
+    uint16_t things_move_tick = 0;
     uint16_t navswitch_tick = 0;
     uint16_t monster_flash_tick = 0;
     bool running = 0;
     bool game_over = 1;
     int duration = 0;
-
 
     system_init ();
     navswitch_init ();
@@ -47,7 +46,7 @@ int main (void)
 
     pacer_init (LOOP_RATE);
 
-    tinygl_text ("GOBBLE: PUSH TO START");
+    tinygl_text ("GOBBLE6: PUSH TO START");
 
     while (1)
     {
@@ -70,13 +69,13 @@ int main (void)
             navswitch_update ();
 
             if (navswitch_push_event_p (NAVSWITCH_NORTH))
-                monster_move (0, -1);
+                things_monster_move (0, -1);
             if (navswitch_push_event_p (NAVSWITCH_SOUTH))
-                monster_move (0, 1);
+                things_monster_move (0, 1);
             if (navswitch_push_event_p (NAVSWITCH_EAST))
-                monster_move (1, 0);
+                things_monster_move (1, 0);
             if (navswitch_push_event_p (NAVSWITCH_WEST))
-                monster_move (-1, 0);
+                things_monster_move (-1, 0);
             
             /* Pause/resume things running around.  */
             if (navswitch_push_event_p (NAVSWITCH_PUSH))
@@ -108,10 +107,10 @@ int main (void)
         }
 
         /* Move the things.  */
-        tick++;
-        if (tick >= LOOP_RATE / MOVE_RATE)
+        things_move_tick++;
+        if (things_move_tick >= LOOP_RATE / MOVE_RATE)
         {
-            tick = 0;
+            things_move_tick = 0;
             
             if (running)
             {
@@ -126,7 +125,7 @@ int main (void)
         {
             monster_flash_tick = 0;
             if (running)
-                monster_toggle ();
+                things_monster_toggle ();
         }
     }
     return 0;
