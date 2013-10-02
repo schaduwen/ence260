@@ -1,8 +1,7 @@
 /** @file   gobble7.c
     @author M.P. Hayes
     @date   1 Oct 2013
-    @brief  A simple game where a monster has to capture `things' that run away.
-*/
+    @brief  A simple game where a monster has to capture `things' that run away.*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +29,7 @@ static bool game_over = 1;
 static int duration = 0;
 
 
-static void display (__unused__ void *data)
+static void display_task (__unused__ void *data)
 {
     tinygl_update ();
 }
@@ -102,7 +101,7 @@ int main (void)
 {
     task_t tasks[] =
     {
-        {.func = display, .period = TASK_RATE / DISPLAY_RATE},
+        {.func = display_task, .period = TASK_RATE / DISPLAY_RATE},
         {.func = navswitch_task, .period = TASK_RATE / NAVSWITCH_RATE},
         {.func = things_move_task, .period = TASK_RATE / THINGS_MOVE_RATE},
         {.func = monster_flash_task, .period = TASK_RATE / MONSTER_FLASH_RATE},
