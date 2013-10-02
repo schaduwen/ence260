@@ -79,7 +79,7 @@ static bool thing_position_valid_p (tinygl_point_t pos)
 }
 
 
-void monster_move (int8_t dx, int8_t dy)
+void things_monster_move (int8_t dx, int8_t dy)
 {
     int8_t other;
     tinygl_point_t newpos;
@@ -98,7 +98,7 @@ void monster_move (int8_t dx, int8_t dy)
 }
 
 
-void monster_toggle (void)
+void things_monster_toggle (void)
 {
     tinygl_pixel_set (things[0].pos, ! tinygl_pixel_get (things[0].pos));
 }

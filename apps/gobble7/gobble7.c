@@ -1,7 +1,7 @@
 /** @file   gobble7.c
     @author M.P. Hayes
     @date   1 Oct 2013
-    @brief 
+    @brief  A simple game where a monster has to capture `things' that run away.
 */
 
 #include <stdio.h>
@@ -18,9 +18,9 @@
 
 #define DISPLAY_RATE 200
 
-#define MOVE_RATE 10
-
 #define NAVSWITCH_RATE 50
+
+#define THINGS_MOVE_RATE 10
 
 #define MONSTER_FLASH_RATE 5
 
@@ -40,11 +40,11 @@ static void monster_flash_task (__unused__ void *data)
 {
     /* Flash the monster.  */
     if (running)
-        monster_toggle ();
+        things_monster_toggle ();
 }
 
 
-static void things_task (__unused__ void *data)
+static void things_move_task (__unused__ void *data)
 {
     /* Move the things.  */
     if (running)
@@ -60,13 +60,13 @@ static void navswitch_task (__unused__ void *data)
     navswitch_update ();
     
     if (navswitch_push_event_p (NAVSWITCH_NORTH))
-        monster_move (0, -1);
+        things_monster_move (0, -1);
     if (navswitch_push_event_p (NAVSWITCH_SOUTH))
-        monster_move (0, 1);
+        things_monster_move (0, 1);
     if (navswitch_push_event_p (NAVSWITCH_EAST))
-        monster_move (1, 0);
+        things_monster_move (1, 0);
     if (navswitch_push_event_p (NAVSWITCH_WEST))
-        monster_move (-1, 0);
+        things_monster_move (-1, 0);
     
     /* Pause/resume things running around.  */
     if (navswitch_push_event_p (NAVSWITCH_PUSH))
@@ -104,7 +104,7 @@ int main (void)
     {
         {.func = display, .period = TASK_RATE / DISPLAY_RATE},
         {.func = navswitch_task, .period = TASK_RATE / NAVSWITCH_RATE},
-        {.func = things_task, .period = TASK_RATE / MOVE_RATE},
+        {.func = things_move_task, .period = TASK_RATE / THINGS_MOVE_RATE},
         {.func = monster_flash_task, .period = TASK_RATE / MONSTER_FLASH_RATE},
     };
 
@@ -119,7 +119,7 @@ int main (void)
     tinygl_text_mode_set (TINYGL_TEXT_MODE_SCROLL);
     tinygl_text_dir_set (TINYGL_TEXT_DIR_ROTATE);
 
-    tinygl_text ("GOBBLE: PUSH TO START");
+    tinygl_text ("GOBBLE7: PUSH TO START");
 
     task_schedule (tasks, 4);
 
