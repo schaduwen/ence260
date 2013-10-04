@@ -43,7 +43,7 @@ boing_state_t boing_update (boing_state_t state)
 boing_state_t boing_reverse (boing_state_t state)
 {
     boing_dir_t newdir[] = {DIR_S, DIR_SW, DIR_W, DIR_NW,
-                            DIR_N, DIR_NE, DIR_W, DIR_SE};    
+                            DIR_N, DIR_NE, DIR_E, DIR_SE};    
 
     state.dir = newdir[state.dir];
     return state;
