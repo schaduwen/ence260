@@ -32,7 +32,7 @@
 #define PIO_H
 
 #include "system.h"
-#ifdef AVR
+#ifdef __AVR__
 #include <avr/io.h>
 #endif
 
