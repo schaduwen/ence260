@@ -37,7 +37,8 @@ bool
 usart1_write_ready_p (void);
 
 
-/** Return non-zero if transmitter finished.  */
+/** Return non-zero if transmission finished.  This is useful for
+    half-duplex operation.  */
 bool
 usart1_write_finished_p (void);
 
