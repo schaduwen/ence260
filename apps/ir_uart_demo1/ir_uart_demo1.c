@@ -8,7 +8,6 @@
 #include "navswitch.h"
 #include "tinygl.h"
 #include "task.h"
-#include "uint8toa.h"
 #include "ir_uart.h"
 
 #define DISPLAY_TASK_RATE 200

@@ -1,14 +1,13 @@
 /** @file   snake1.c
     @author M.P. Hayes
     @date   5 Oct 2010
-    @note   The sneake head deliberately moves off screen unless turned.
+    @note   The snake head deliberately moves off screen unless turned.
 */
 
 #include "system.h"
 #include "navswitch.h"
 #include "tinygl.h"
 #include "pacer.h"
-#include "../fonts/font5x7_1.h"
 
 
 /* Define polling rate in Hz.  */
@@ -86,7 +85,6 @@ int main (void)
     snake.pos.y = TINYGL_HEIGHT - 1;
 
     tinygl_init (LOOP_RATE);
-    tinygl_font_set (&font5x7_1);
 
     navswitch_init ();
 
