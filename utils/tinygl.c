@@ -237,10 +237,10 @@ static void tinygl_text_advance (void)
 {
     if (!tinygl.message[tinygl.message_index])
     {
-        tinygl.message_index = 0;
-        if (tinygl.message_repeats == 0)
+        if (tinygl.message_repeats <= 1)
             return;
         tinygl.message_repeats--;
+        tinygl.message_index = 0;
     }
     
     if (tinygl.message[tinygl.message_index])
