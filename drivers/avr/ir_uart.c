@@ -7,6 +7,7 @@
 #include "usart1.h"
 #include "timer0.h"
 #include "pio.h"
+#include "delay.h"
 
 
 /* Return non-zero if there is a character ready to be read.  */
@@ -51,8 +52,25 @@ ir_uart_putc (char ch)
 
     /* Gobble echoed character.  The echoing is due to an electrical
        common-path interference problem caused by a poor PCB layout of the
-       track powering the IR receiver.  */
-    ir_uart_getc ();
+       track powering the IR receiver.  Unfortunately, it does not always
+       occur with some combination of UCFK4 boards and laptops.  Perhaps
+       some laptops are more miserly with their current allocation and
+       some IR LEDs do not draw as much current?  So as a workaround
+       we need to wait until the transmission has finished and then check
+       if something was immediately received. 
+
+       Having said all this, it is possible to get an optical reflection
+       of the transmitted signal.  The following code should handle this 
+       as well.  */
+
+    while (! ir_uart_write_finished_p ())
+        continue;
+
+    /* Play safe and wait for receive complete flag to be set.  */
+    DELAY_US (1);
+    
+    if (ir_uart_read_ready_p ())
+        ir_uart_getc ();
 
     return 1;
 }
