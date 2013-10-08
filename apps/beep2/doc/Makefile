@@ -1,7 +1,7 @@
 # File:   Makefile
 # Author: M. P. Hayes, UCECE
 # Date:   11 Sep 2010
-# Descr:  Makefile for squeak1 docs
+# Descr:  Makefile for beep2 docs
 
 # The scripts used to make the graphs require the program dot; this
 # is part of the graphviz package.

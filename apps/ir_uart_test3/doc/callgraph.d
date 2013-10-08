@@ -116,7 +116,11 @@ usart1_write_ready_p@usart1.c:
 
 usart1_putc@usart1.c: usart1_write_ready_p
 
-ir_uart_putc@ir_uart.c: usart1_putc
+usart1_write_finished_p@usart1.c: 
 
-main@ir_uart_test3.c: system_init tinygl_init tinygl_font_set tinygl_text_speed_set tinygl_text_mode_set tinygl_text_dir_set navswitch_init ir_uart_init pacer_init show_byte pacer_wait tinygl_update ir_uart_read_ready_p ir_uart_getc show_byte navswitch_update navswitch_push_event_p ir_uart_putc ir_uart_getc navswitch_push_event_p ir_uart_putc ir_uart_getc
+ir_uart_write_finished_p@ir_uart.c: usart1_write_finished_p
+
+ir_uart_putc@ir_uart.c: usart1_putc ir_uart_write_finished_p _delay_loop_1 ir_uart_read_ready_p ir_uart_getc
+
+main@ir_uart_test3.c: system_init tinygl_init tinygl_font_set tinygl_text_speed_set tinygl_text_mode_set tinygl_text_dir_set navswitch_init ir_uart_init pacer_init show_byte pacer_wait tinygl_update ir_uart_read_ready_p ir_uart_getc show_byte navswitch_update navswitch_push_event_p ir_uart_putc navswitch_push_event_p ir_uart_putc
 
