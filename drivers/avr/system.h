@@ -8,8 +8,7 @@
 
 /* Data typedefs.  */
 #include <stdint.h>
-
-typedef uint8_t bool;
+#include <stdbool.h>
 
 
 /** Useful macros.  */
