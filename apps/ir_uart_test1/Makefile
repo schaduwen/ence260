@@ -19,7 +19,7 @@ all: ir_uart_test1.out
 ir_uart_test1.o: ir_uart_test1.c ../../drivers/avr/ir_uart.h ../../drivers/avr/system.h ../../drivers/display.h ../../drivers/navswitch.h ../../fonts/font5x7_1.h ../../utils/font.h ../../utils/pacer.h ../../utils/tinygl.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-ir_uart.o: ../../drivers/avr/ir_uart.c ../../drivers/avr/ir_uart.h ../../drivers/avr/pio.h ../../drivers/avr/system.h ../../drivers/avr/timer0.h ../../drivers/avr/usart1.h
+ir_uart.o: ../../drivers/avr/ir_uart.c ../../drivers/avr/delay.h ../../drivers/avr/ir_uart.h ../../drivers/avr/pio.h ../../drivers/avr/system.h ../../drivers/avr/timer0.h ../../drivers/avr/usart1.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 pio.o: ../../drivers/avr/pio.c ../../drivers/avr/pio.h ../../drivers/avr/system.h

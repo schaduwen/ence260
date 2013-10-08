@@ -4,7 +4,7 @@
 # Descr:  Makefile for snake1
 
 CC = gcc
-CFLAGS = -Wall -Wstrict-prototypes -Wextra -g -I../../drivers/test -I../../drivers -I../../fonts -I../../utils
+CFLAGS = -Wall -Wstrict-prototypes -Wextra -g -I../../drivers/test -I../../drivers -I../../utils
 
 DEL = rm
 
@@ -14,7 +14,7 @@ all: snake1
 
 
 # Compile: create object files from C source files.
-snake1-test.o: snake1.c ../../drivers/display.h ../../drivers/navswitch.h ../../drivers/test/system.h ../../fonts/font5x7_1.h ../../utils/font.h ../../utils/pacer.h ../../utils/tinygl.h
+snake1-test.o: snake1.c ../../drivers/display.h ../../drivers/navswitch.h ../../drivers/test/system.h ../../utils/font.h ../../utils/pacer.h ../../utils/tinygl.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 display-test.o: ../../drivers/display.c ../../drivers/display.h ../../drivers/ledmat.h ../../drivers/test/system.h

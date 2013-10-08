@@ -5,7 +5,7 @@
 
 # Definitions.
 CC = avr-gcc
-CFLAGS = -mmcu=atmega32u2 -Os -Wall -Wstrict-prototypes -Wextra -g -I../../drivers/avr -I../../fonts -I../../drivers -I../../utils
+CFLAGS = -mmcu=atmega32u2 -Os -Wall -Wstrict-prototypes -Wextra -g -I../../drivers/avr -I../../drivers -I../../utils
 OBJCOPY = avr-objcopy
 SIZE = avr-size
 DEL = rm
@@ -16,7 +16,7 @@ all: snake1.out
 
 
 # Compile: create object files from C source files.
-snake1.o: snake1.c ../../drivers/avr/system.h ../../drivers/display.h ../../drivers/navswitch.h ../../fonts/font5x7_1.h ../../utils/font.h ../../utils/pacer.h ../../utils/tinygl.h
+snake1.o: snake1.c ../../drivers/avr/system.h ../../drivers/display.h ../../drivers/navswitch.h ../../utils/font.h ../../utils/pacer.h ../../utils/tinygl.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 pio.o: ../../drivers/avr/pio.c ../../drivers/avr/pio.h ../../drivers/avr/system.h
