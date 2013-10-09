@@ -64,13 +64,17 @@ usart1_write_finished_p (void)
 
 
 /** Write character to USART1.  This blocks until the character can be
-    written into transmit register.  */
+    written into the transmit register.  */
 void
 usart1_putc (char ch)
 {
     while (!usart1_write_ready_p ())
         continue;                   
 
+    /* Write a 1 to the TXC1 bit to clear it!  It will be set when the
+       data is shifted out of the transmit shift register.  */
+    UCSR1A |= BIT (TXC1);
+    
     UDR1 = ch;
 }
 
