@@ -43,11 +43,26 @@ ir_uart_write_finished_p (void)
 }
 
 
-/* Write character to IR_UART.  This returns zero if
-   the character could not be written.  */
-int8_t
+/** Write character to IR_UART.  This blocks until the character can
+    be written into the transmit buffer.  It does not check to see
+    if there is any echoed character (see ir_uart_putc).  */
+void
+ir_uart_putc_nocheck (char ch)
+{
+    usart1_putc (ch);
+}
+
+
+/** Write character to IR_UART.  This blocks until the character is
+    written.  It then checks if data has been received and if so, reads
+    the data and throws it away on the assumption that it is electrical
+    or optical echoing.  */
+void
 ir_uart_putc (char ch)
 {
+    /* At 2400 baud with one start bit, 8 data bits, and no parity,
+       this will take 3.75 ms to transmit.  Note, the maximum bit rate
+       for the IR receiver is 4000 bps. */
     usart1_putc (ch);
 
     /* Gobble echoed character.  The echoing is due to an electrical
@@ -66,13 +81,14 @@ ir_uart_putc (char ch)
     while (! ir_uart_write_finished_p ())
         continue;
 
-    /* Play safe and wait for receive complete flag to be set.  */
-    DELAY_US (1);
+    /* The IR receiver has a delay of about 150 microseconds.  So need
+       to wait for UART to have received the data and set its receive
+       complete bit.  */
+    DELAY_US (150);
     
+    /* Check is something was inadvertently read.  */
     if (ir_uart_read_ready_p ())
         ir_uart_getc ();
-
-    return 1;
 }
 
 
