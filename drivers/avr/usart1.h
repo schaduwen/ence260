@@ -44,7 +44,7 @@ usart1_write_finished_p (void);
 
 
 /** Write character to USART1.  This blocks until the character can be
-    written into transmit register.  */
+    written into the transmit register.  */
 void
 usart1_putc (char ch);
 

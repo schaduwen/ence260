@@ -77,9 +77,18 @@ bool
 ir_uart_write_finished_p (void);
 
 
-/* Write character to IR_UART.  This returns zero if
-   the character could not be written.  */
-int8_t
+/** Write character to IR_UART.  This blocks until the character can
+    be written into the transmit buffer.  It does not check to see
+    if there is any echoed character (see ir_uart_putc).  */
+void
+ir_uart_putc_nocheck (char ch);
+
+
+/* Write character to IR_UART.  This blocks until the character is
+   written.  It then checks if data has been received and if so, reads
+   the data and throws it away on the assumption that it is electrical
+   or optical echoing.  */
+void
 ir_uart_putc (char ch);
 
 
