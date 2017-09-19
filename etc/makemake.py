@@ -34,6 +34,9 @@ There are special strings that are replaced in the template file:
  @OBJ@          List of object files
  @CCRULES@      Rules to build object files from C files
 
+Note, the callgraph generation requires non-documented behaviour of
+gcc.   This is likely to change.
+
 """
 
 # See http://www.amk.ca/python/howto/regex/ for regular expressions in python.
@@ -42,6 +45,7 @@ There are special strings that are replaced in the template file:
 
 # http://www.cs.umd.edu/~nspring/software/style-check-readme.html
 
+from __future__ import print_function
 import sys
 import re
 import os
@@ -84,8 +88,7 @@ def hfiles_get (cfile, filedeps, options):
     deps = filedeps[cfile]
     
     if cfile in deps:
-        print >> sys.stderr, 'Circular dependency for', cfile        
-
+        print('Circular dependency for %s' % cfile, file=sys.stderr)
 
     hfilelist = []
 
@@ -138,7 +141,7 @@ def paths_prune (filelist):
 def file_parse (pathname, indent, debug):
 
     if debug:
-        print >> sys.stderr, indent, 'Parsing file', pathname
+        print('%sParsing file %s' % (indent, pathname), file=sys.stderr)        
 
     file = open (pathname, 'r')
     text = file.read ()
@@ -154,7 +157,7 @@ def file_parse (pathname, indent, debug):
     hfilelist = prog.findall (text, 0)    
 
     if debug:
-        print >> sys.stderr, indent, 'Found hfiles', hfilelist, 'in', pathname
+        print('%sFound hfiles %s in %s' % (indent, hfilelist, pathname), file=sys.stderr)
     return hfilelist
 
 
@@ -223,7 +226,7 @@ def makefile_print (options, template, maincfilename, filedeps,
             hfilelist.sort ()
 
             if options.debug:
-                print >> sys.stderr, 'Need hfiles', hfilelist, 'for', cfile
+                print('Need hfiles %s for %s' % (hfilelist, cfile), file=sys.stderr)
 
             for hfile in hfilelist:
                 rules = rules + ' ' + hfile
@@ -233,8 +236,7 @@ def makefile_print (options, template, maincfilename, filedeps,
 
         text = re.sub (r'@CCRULES@', rules, text)
 
-
-    print text
+    print(text)
 
 
 def subprocess_command(command):
@@ -269,7 +271,7 @@ def functions_find (filepath, functiondeps, functions, options):
 
     command = options.compile + ' -c ' + filepath + ' -fdump-tree-cfg-raw -DDEBUG > /dev/null'
     if options.debug:
-        print >> sys.stderr, command
+        print(command, file=sys.stderr)
     os.system (command)
 
     version = subprocess_command(options.compile + ' -dumpversion').strip()
@@ -282,6 +284,7 @@ def functions_find (filepath, functiondeps, functions, options):
     rtlfilename = os.path.abspath (os.path.basename (filepath)) + ext
 
     if not os.path.exists (rtlfilename):
+        print('Could not find %s to generate callgraph' % rtlfilename, file=sys.stderr)
         return
 
     file = open (rtlfilename, 'r')
@@ -296,15 +299,15 @@ def functions_find (filepath, functiondeps, functions, options):
             functiondeps[function] = []
             functions[function] = filepath
             if options.debug:
-                print >> sys.stderr, 'DEF', function
+                print('DEF', function, file=sys.stderr)
         matches = re.findall (r'.*gimple_call <([\w]*),', line)
         if matches:
             if options.debug:
-                print >> sys.stderr, 'USE', matches[0]
+                print('USE', matches[0], file=sys.stderr)
             if function:
                 functiondeps[function].append (matches[0])
             else:
-                print >> sys.stderr, matches[0], 'used outside function in', filepath
+                print(matches[0], 'used outside function in', filepath, file=sys.stderr)
 
     # Search for where a function address is taken
     function = None
@@ -320,7 +323,7 @@ def functions_find (filepath, functiondeps, functions, options):
 
     command = 'rm ' + rtlfilename
     if options.debug:
-        print >> sys.stderr, command
+        print(command, file=sys.stderr)
     os.system (command)
 
 
@@ -382,7 +385,7 @@ def alldeps_print (depsdir, options):
         if options.relpath:
             deps = [os.path.relpath (dep) for dep in deps]
 
-        print os.path.relpath (target) + ': ' + ' '.join (deps) + '\n'
+        print(os.path.relpath (target) + ': ' + ' '.join (deps) + '\n')
 
 
 def deps_print (target, depsdir, options, record = {}):
@@ -407,7 +410,7 @@ def deps_print (target, depsdir, options, record = {}):
 
     record[target] = True
 
-    print os.path.relpath (target) + ': ' + ' '.join (deps) + '\n'
+    print(os.path.relpath (target) + ': ' + ' '.join (deps) + '\n')
 
 
 def callgraph_print (target, functiondeps, functions, options, record = {}):
@@ -434,7 +437,7 @@ def callgraph_print (target, functiondeps, functions, options, record = {}):
 
 #    print os.path.relpath (target) + ': ' + ' '.join (deps) + '\n' + '\t' + os.path.basename (functions[target]) + '\n'
 
-    print os.path.relpath (target) + '@' + os.path.basename (functions[target]) + ': ' + ' '.join (deps) + '\n'
+    print(os.path.relpath (target) + '@' + os.path.basename (functions[target]) + ': ' + ' '.join (deps) + '\n')
 
 
 
@@ -511,7 +514,7 @@ def main(argv = None):
     (options, args) = parser.parse_args ()
 
     if len (args) < 1:
-        print __doc__
+        print(__doc__)
         sys.exit (0)
 
 
@@ -532,22 +535,22 @@ def main(argv = None):
     options.compile = options.cc + ' ' + options.cflags + ' ' + includes
 
     if options.debug:
-        print >> sys.stderr, search_list
-        print >> sys.stderr, 'template', options.template
-        print >> sys.stderr, 'cfile', maincfilename
-        print >> sys.stderr, 'search_path', search_path
-        print >> sys.stderr, 'CWD = ', os.getcwd()
-        print >> sys.stderr, options.compile
+        print(search_list, file=sys.stderr)
+        print('template', options.template, file=sys.stderr)
+        print('cfile', maincfilename, file=sys.stderr)
+        print('search_path', search_path, file=sys.stderr)
+        print('CWD = ', os.getcwd(), file=sys.stderr)
+        print(options.compile, file=sys.stderr)
 
     if os.path.isdir (maincfilename):
         if options.debug:
-            print >> sys.stderr, 'Searching ' + maincfilename
+            print('Searching ' + maincfilename, file=sys.stderr)
         maincfilename = maincfilename_find (maincfilename)
         if not maincfilename:
             sys.exit (1)
 
         if options.debug:
-            print >> sys.stderr, 'Found C file ' + maincfilename
+            print('Found C file ' + maincfilename, file=sys.stderr)
 
 
     # Search main c file looking for header files included with #include
