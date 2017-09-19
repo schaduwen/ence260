@@ -58,6 +58,44 @@ typedef enum pio_config_enum
 } pio_config_t;
 
 
+/** Define the pins.  */
+#define PA0_PIO PIO_DEFINE(PORT_A, 0)
+#define PA1_PIO PIO_DEFINE(PORT_A, 1)
+#define PA2_PIO PIO_DEFINE(PORT_A, 2)
+#define PA3_PIO PIO_DEFINE(PORT_A, 3)
+#define PA4_PIO PIO_DEFINE(PORT_A, 4)
+#define PA5_PIO PIO_DEFINE(PORT_A, 5)
+#define PA6_PIO PIO_DEFINE(PORT_A, 6)
+#define PA7_PIO PIO_DEFINE(PORT_A, 7)
+
+#define PB0_PIO PIO_DEFINE(PORT_B, 0)
+#define PB1_PIO PIO_DEFINE(PORT_B, 1)
+#define PB2_PIO PIO_DEFINE(PORT_B, 2)
+#define PB3_PIO PIO_DEFINE(PORT_B, 3)
+#define PB4_PIO PIO_DEFINE(PORT_B, 4)
+#define PB5_PIO PIO_DEFINE(PORT_B, 5)
+#define PB6_PIO PIO_DEFINE(PORT_B, 6)
+#define PB7_PIO PIO_DEFINE(PORT_B, 7)
+
+#define PC0_PIO PIO_DEFINE(PORT_C, 0)
+#define PC1_PIO PIO_DEFINE(PORT_C, 1)
+#define PC2_PIO PIO_DEFINE(PORT_C, 2)
+#define PC3_PIO PIO_DEFINE(PORT_C, 3)
+#define PC4_PIO PIO_DEFINE(PORT_C, 4)
+#define PC5_PIO PIO_DEFINE(PORT_C, 5)
+#define PC6_PIO PIO_DEFINE(PORT_C, 6)
+#define PC7_PIO PIO_DEFINE(PORT_C, 7)
+
+#define PD0_PIO PIO_DEFINE(PORT_D, 0)
+#define PD1_PIO PIO_DEFINE(PORT_D, 1)
+#define PD2_PIO PIO_DEFINE(PORT_D, 2)
+#define PD3_PIO PIO_DEFINE(PORT_D, 3)
+#define PD4_PIO PIO_DEFINE(PORT_D, 4)
+#define PD5_PIO PIO_DEFINE(PORT_D, 5)
+#define PD6_PIO PIO_DEFINE(PORT_D, 6)
+#define PD7_PIO PIO_DEFINE(PORT_D, 7)
+
+
 /** DDR  PORT Comment
      0     0  High impedance input
      0     1  Weak pullup input
