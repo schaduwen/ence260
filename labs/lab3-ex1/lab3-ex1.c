@@ -4,7 +4,6 @@
 #include "tinygl.h"
 #include "../fonts/font3x5_1.h"
 
-
 int main (void)
 {
     system_init();
