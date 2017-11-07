@@ -14,13 +14,16 @@ all: lab3-ex2
 
 
 # Compile: create object files from C source files.
-lab3-ex2-test.o: lab3-ex2.c ../../drivers/display.h ../../drivers/test/system.h ../../fonts/font5x7_1.h ../../utils/font.h ../../utils/pacer.h ../../utils/tinygl.h
+lab3-ex2-test.o: lab3-ex2.c ../../drivers/display.h ../../drivers/navswitch.h ../../drivers/test/system.h ../../fonts/font5x7_1.h ../../utils/font.h ../../utils/pacer.h ../../utils/tinygl.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 display-test.o: ../../drivers/display.c ../../drivers/display.h ../../drivers/ledmat.h ../../drivers/test/system.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 ledmat-test.o: ../../drivers/ledmat.c ../../drivers/ledmat.h ../../drivers/test/avrtest.h ../../drivers/test/pio.h ../../drivers/test/system.h
+	$(CC) -c $(CFLAGS) $< -o $@
+
+navswitch-test.o: ../../drivers/navswitch.c ../../drivers/navswitch.h ../../drivers/test/avrtest.h ../../drivers/test/delay.h ../../drivers/test/pio.h ../../drivers/test/system.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 mgetkey-test.o: ../../drivers/test/mgetkey.c ../../drivers/test/mgetkey.h
@@ -48,14 +51,14 @@ tinygl-test.o: ../../utils/tinygl.c ../../drivers/display.h ../../drivers/test/s
 
 
 # Link: create lab3-executable file from object files.
-lab3-ex2: lab3-ex2-test.o display-test.o ledmat-test.o mgetkey-test.o pio-test.o system-test.o timer-test.o font-test.o pacer-test.o tinygl-test.o
+lab3-ex2: lab3-ex2-test.o display-test.o ledmat-test.o navswitch-test.o mgetkey-test.o pio-test.o system-test.o timer-test.o font-test.o pacer-test.o tinygl-test.o
 	$(CC) $(CFLAGS) $^ -o $@ -lrt
 
 
 # Clean: delete derived files.
 .PHONY: clean
 clean: 
-	-$(DEL) lab3-ex2 lab3-ex2-test.o display-test.o ledmat-test.o mgetkey-test.o pio-test.o system-test.o timer-test.o font-test.o pacer-test.o tinygl-test.o
+	-$(DEL) lab3-ex2 lab3-ex2-test.o display-test.o ledmat-test.o navswitch-test.o mgetkey-test.o pio-test.o system-test.o timer-test.o font-test.o pacer-test.o tinygl-test.o
 
 
 
