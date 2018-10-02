@@ -13,7 +13,7 @@ int main (void)
 
     /* TODO: Initialise tinygl. */
 
-    /* TODO: Set the message using tinygl_tlab3-ext().  */
+    /* TODO: Set the message using tinygl_text().  */
     
 
     pacer_init (PACER_RATE);
