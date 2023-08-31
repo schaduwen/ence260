@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 """makemake V0.10
 Copyright (c) 2010-2017 Michael P. Hayes, UC ECE, NZ
 
