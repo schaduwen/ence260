@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 """graphdeps V0.10
 Copyright (c) 2011 Michael P. Hayes, UC ECE, NZ
 
