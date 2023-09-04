@@ -16,7 +16,7 @@ all: bounce4.out
 
 
 # Compile: create object files from C source files.
-bounce4.o: bounce4.c ../../drivers/avr/system.h ../../drivers/display.h ../../utils/boing.h ../../utils/font.h ../../utils/pacer.h ../../utils/tinygl.h
+bounce4.o: bounce4.c ../../drivers/avr/system.h ../../drivers/display.h boing.h ../../utils/font.h ../../utils/pacer.h ../../utils/tinygl.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 pio.o: ../../drivers/avr/pio.c ../../drivers/avr/pio.h ../../drivers/avr/system.h
@@ -34,7 +34,7 @@ display.o: ../../drivers/display.c ../../drivers/avr/system.h ../../drivers/disp
 ledmat.o: ../../drivers/ledmat.c ../../drivers/avr/pio.h ../../drivers/avr/system.h ../../drivers/ledmat.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-boing.o: ../../utils/boing.c ../../drivers/avr/system.h ../../drivers/display.h ../../utils/boing.h ../../utils/font.h ../../utils/tinygl.h
+boing.o: boing.c ../../drivers/avr/system.h ../../drivers/display.h boing.h ../../utils/font.h ../../utils/tinygl.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 font.o: ../../utils/font.c ../../drivers/avr/system.h ../../utils/font.h
