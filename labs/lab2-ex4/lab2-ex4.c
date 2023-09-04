@@ -12,8 +12,8 @@ int main (void)
     /* TODO: Initialise the pins of the LED matrix.  */
     
 
-    /* Set up pacer with a frequency of 50 Hz.  */
-    pacer_init (50);
+    /* Set up pacer with a frequency of 75 Hz.  */
+    pacer_init (75);
 
     while (1)
     {
