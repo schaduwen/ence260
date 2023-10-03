@@ -10,11 +10,24 @@ int main (void)
     system_init ();
     
     /* TODO: Initialise the pins of the LED matrix.  */
+    pio_config_set(LEDMAT_COL1_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_COL2_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_COL3_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_COL4_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_COL5_PIO, PIO_OUTPUT_HIGH);
     
+    pio_config_set(LEDMAT_ROW1_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW2_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW3_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW4_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW5_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW6_PIO, PIO_OUTPUT_HIGH);
+    pio_config_set(LEDMAT_ROW7_PIO, PIO_OUTPUT_HIGH);
 
     /* Set up pacer with a frequency of 100 Hz.  
         This gives 50Hz alternating between the 2 states.*/
     pacer_init (100);
+    int8_t state = 0;
 
     while (1)
     {
@@ -23,5 +36,19 @@ int main (void)
         
         /* TODO: Drive the LED matrix using the pio functions,
            displaying only three corner LEDs.  */
+        if (state) {
+            pio_config_set(LEDMAT_ROW1_PIO, PIO_OUTPUT_LOW);
+            pio_config_set(LEDMAT_ROW7_PIO, PIO_OUTPUT_LOW);
+            pio_config_set(LEDMAT_COL1_PIO, PIO_OUTPUT_LOW);
+
+            pio_config_set(LEDMAT_COL5_PIO, PIO_OUTPUT_HIGH);
+        } else {
+            pio_config_set(LEDMAT_ROW1_PIO, PIO_OUTPUT_LOW);
+            pio_config_set(LEDMAT_COL5_PIO, PIO_OUTPUT_LOW);
+
+            pio_config_set(LEDMAT_ROW7_PIO, PIO_OUTPUT_HIGH);
+            pio_config_set(LEDMAT_COL1_PIO, PIO_OUTPUT_HIGH);
+        }
+        state = !state;
     }
 }

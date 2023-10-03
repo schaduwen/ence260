@@ -14,11 +14,7 @@ int main (void)
     {
         if (button_pressed_p ())
         {
-            led_on ();
-        }
-        else
-        {
-            led_off ();
+            led_toggle ();
         }
     }
 }

@@ -2,6 +2,7 @@
 #include "pio.h"
 #include "pacer.h"
 
+static uint8_t previous_column = 5;
 
 /** Define PIO pins driving LED matrix rows.  */
 static const pio_t rows[] =
@@ -31,7 +32,16 @@ static void display_column (uint8_t row_pattern, uint8_t current_column)
 {
 
     /* TODO */
-
+    pio_output_high(cols[previous_column]);
+    pio_output_low(cols[current_column]);
+    for (uint8_t i=0; i<LEDMAT_ROWS_NUM; i++) {
+        if ((row_pattern >> i) & 1) {
+            pio_output_low(rows[i]);
+        } else {
+            pio_output_high(rows[i]);
+        }
+    }
+    previous_column = current_column;
 }
 
 
@@ -43,7 +53,12 @@ int main (void)
     pacer_init (500);
     
     /* TODO: Initialise LED matrix pins.  */
-    
+    for (uint8_t i=0; i<LEDMAT_ROWS_NUM; i++) {
+        pio_config_set(rows[i], PIO_OUTPUT_HIGH);
+    }
+    for (uint8_t j=0; j<LEDMAT_COLS_NUM; j++) {
+        pio_config_set(cols[j], PIO_OUTPUT_HIGH);
+    }
 
     while (1)
     {
