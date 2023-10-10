@@ -5,10 +5,13 @@
 #include "../fonts/font3x5_1.h"
 
 /* Define polling rates in Hz.  */
-#define BUTTON_TASK_RATE 
-#define DISPLAY_TASK_RATE   /* Display rate */
-#define TIMER_TASK_RATE   /* from Stopwatch code */
-#define PACER_RATE  /* Pacer loop - controls main loop */
+#define BUTTON_TASK_RATE 100
+#define DISPLAY_TASK_RATE 250
+/* Display rate */
+#define TIMER_TASK_RATE 100
+/* from Stopwatch code */
+#define PACER_RATE 500
+/* Pacer loop - controls main loop */
 
 static bool run;
 
@@ -73,14 +76,27 @@ int main (void)
     system_init();
     
     /* TODO: Initialise the button driver, tinygl, and the pacer.  */
+    button_task_init();
+    display_task_init();
+    timer_task_init();
+    pacer_init(PACER_RATE);
 
 
+    uint16_t time = 0;
     while(1)
     {
         pacer_wait();
 
 	/* TODO: call the tasks at the appropriate frequencies  */
+        if (time % TIMER_TASK_RATE/DISPLAY_TASK_RATE == 0) {
+            display_task();
+        }
 
+        if (time % TIMER_TASK_RATE/BUTTON_TASK_RATE == 0) {
+            button_poll_task();
+            timer_task();
+        }
+        time++;
     }
     return 0;
 }

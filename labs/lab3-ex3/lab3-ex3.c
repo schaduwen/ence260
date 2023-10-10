@@ -30,6 +30,7 @@ int main (void)
     navswitch_init ();
 
     /* TODO: Initialise IR driver.  */
+    ir_uart_init();
 
 
     pacer_init (PACER_RATE);
@@ -40,14 +41,27 @@ int main (void)
         tinygl_update ();
         navswitch_update ();
         
-        if (navswitch_push_event_p (NAVSWITCH_NORTH))
-            character++;
+        if (navswitch_push_event_p (NAVSWITCH_NORTH)) {
+            if (character != 'D') {
+                character++;
+            }
+        }
 
-        if (navswitch_push_event_p (NAVSWITCH_SOUTH))
-            character--;
+        if (navswitch_push_event_p (NAVSWITCH_SOUTH)) {
+            if (character != 'A') {
+                character--;
+            }
+        }
 
         /* TODO: Transmit the character over IR on a NAVSWITCH_PUSH
            event.  */
+        if (navswitch_push_event_p (NAVSWITCH_PUSH)) {
+            ir_uart_putc(character);
+        }
+
+        if (ir_uart_read_ready_p()) {
+            character = ir_uart_getc();
+        }
         
         display_character (character);
         
